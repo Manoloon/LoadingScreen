@@ -26,9 +26,10 @@ public:
 
 	void Construct(const FArguments& InArgs)
 	{
-		//Debemos cargar un logo antes de todo , ya que es lo primero en cargar.
 		static const FName LoadingScreenName(TEXT("/Game/UI/loading"));
 		LoadingScreenBrush = MakeShareable(new FAsyncLoadingScreenBrush(LoadingScreenName,FVector2D(1408,792)));
+		static const FName ThrobberImage(TEXT("/Game/UI/Throbber"));
+		ThrobberImageBrush = MakeShareable(new FAsyncLoadingScreenBrush(ThrobberImage,FVector2D(16,16)));
 		FSlateBrush *BGBrush = new FSlateBrush();
 		BGBrush->TintColor= FLinearColor(0.04f,0.04f,0.04f,1.0f);
 
@@ -60,20 +61,84 @@ public:
 				.Padding(FMargin(10.0f))
 				[
 					SNew(SThrobber)
+					.PieceImage(ThrobberImageBrush.Get())
 					.Animate(SThrobber::Horizontal)
-					.NumPieces(16)
+					.NumPieces(8)
 					.Visibility(this, &SAsyncLoadScreen::GetLoadIndicatorVisibility)
 				]
 			]
 		];
 	}
 private:
+        // ReSharper disable once CppMemberFunctionMayBeStatic is used by .Visibility in line 65
+        EVisibility GetLoadIndicatorVisibility() const
+	{
+		return GetMoviePlayer()->IsLoadingFinished() ? EVisibility::Collapsed : EVisibility::Visible;
+	}
+	TSharedPtr<FSlateDynamicImageBrush> LoadingScreenBrush;
+	TSharedPtr<FSlateDynamicImageBrush> ThrobberImageBrush;
+};
+
+class SAsyncStartScreen : public SCompoundWidget
+{
+public:
+	SLATE_BEGIN_ARGS(SAsyncStartScreen){}
+	SLATE_END_ARGS()
+
+	void Construct(const FArguments& InArgs)
+	{
+		static const FName LoadingScreenName(TEXT("/Game/UI/UELogo"));
+		LoadingScreenBrush = MakeShareable(new FAsyncLoadingScreenBrush(LoadingScreenName,FVector2D(1726,337)));
+		static const FName ThrobberImage(TEXT("/Game/UI/Throbber"));
+		ThrobberImageBrush = MakeShareable(new FAsyncLoadingScreenBrush(ThrobberImage,FVector2D(16,16)));
+		FSlateBrush *BGBrush = new FSlateBrush();
+		BGBrush->TintColor= FLinearColor(0.0f,0.0f,0.0f,1.0f);
+
+		ChildSlot
+			[
+			SNew(SOverlay)
+			+ SOverlay::Slot()
+			.HAlign(HAlign_Fill)
+			.VAlign(VAlign_Fill)
+			[
+				SNew(SBorder)	
+				.BorderImage(BGBrush)
+			]
+			+SOverlay::Slot()
+			.HAlign(HAlign_Center)
+			.VAlign(VAlign_Center)
+			[
+				SNew(SImage)
+				.Image(LoadingScreenBrush.Get())
+			]
+			+SOverlay::Slot()
+			.HAlign(HAlign_Fill)
+			.VAlign(VAlign_Fill)
+			[
+				SNew(SVerticalBox)
+				+SVerticalBox::Slot()
+				.VAlign(VAlign_Bottom)
+				.HAlign(HAlign_Right)
+				.Padding(FMargin(10.0f))
+				[
+					SNew(SThrobber)
+					.PieceImage(ThrobberImageBrush.Get())
+					.Animate(SThrobber::Horizontal)
+					.NumPieces(4)
+					.Visibility(this, 
+					&SAsyncStartScreen::GetLoadIndicatorVisibility)
+				]
+			]
+		];
+	}
+private:
+	// ReSharper disable once CppMemberFunctionMayBeStatic is used by .Visibility in line 65
 	EVisibility GetLoadIndicatorVisibility() const
 	{
 		return GetMoviePlayer()->IsLoadingFinished() ? EVisibility::Collapsed : EVisibility::Visible;
 	}
-	
 	TSharedPtr<FSlateDynamicImageBrush> LoadingScreenBrush;
+	TSharedPtr<FSlateDynamicImageBrush> ThrobberImageBrush;
 };
 
 class FAsyncLoadScreenModule : public IAsyncLoadScreenModule
@@ -81,8 +146,8 @@ class FAsyncLoadScreenModule : public IAsyncLoadScreenModule
 public:
 	virtual void StartupModule() override
 	{
-		// Forzamos la referencia del logo.
-		LoadObject<UObject>(nullptr,TEXT("/Game/UI/loading"));
+		LoadObject<UObject>(nullptr,TEXT("/Game/UI/UELogo.png"));
+		LoadObject<UObject>(nullptr,TEXT("/Game/UI/Throbber"));
 
 		if(IsMoviePlayerEnabled())
 		{
@@ -116,7 +181,7 @@ public:
 		FLoadingScreenAttributes LoadingScreen;
 		LoadingScreen.bAutoCompleteWhenLoadingCompletes = true;
 		LoadingScreen.MinimumLoadingScreenDisplayTime = 3.f;
-		LoadingScreen.WidgetLoadingScreen = SNew(SAsyncLoadScreen);
+		LoadingScreen.WidgetLoadingScreen = SNew(SAsyncStartScreen);
 		GetMoviePlayer()->SetupLoadingScreen(LoadingScreen);
 	}
 };
