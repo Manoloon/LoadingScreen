@@ -2,8 +2,7 @@
 
 #include "AsyncLoadScreen.h"
 
-void UBlueprintLibrary::PlayLoadingScreen(bool PlayUntilStopped, float PlayTime, 
-	UUserWidget* LoadingWidget)
+void UBlueprintLibrary::PlayLoadingScreen(bool PlayUntilStopped, float PlayTime)
 {
 	IAsyncLoadScreenModule& LoadingScreenModule = IAsyncLoadScreenModule::Get();
 	LoadingScreenModule.StartInGameLoadingScreen(PlayUntilStopped,PlayTime);

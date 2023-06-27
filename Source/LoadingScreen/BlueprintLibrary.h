@@ -9,8 +9,7 @@ class UBlueprintLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintCallable)
-	static void PlayLoadingScreen(bool PlayUntilStopped, float PlayTime, 
-	UUserWidget* LoadingWidget =nullptr);
+	static void PlayLoadingScreen(bool PlayUntilStopped, float PlayTime);
 	UFUNCTION(BlueprintCallable)
 	static void StopLoadingScreen();
 	

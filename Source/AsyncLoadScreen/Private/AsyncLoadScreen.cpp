@@ -60,6 +60,8 @@ public:
 				.Padding(FMargin(10.0f))
 				[
 					SNew(SThrobber)
+					.Animate(SThrobber::Horizontal)
+					.NumPieces(16)
 					.Visibility(this, &SAsyncLoadScreen::GetLoadIndicatorVisibility)
 				]
 			]
@@ -68,7 +70,6 @@ public:
 private:
 	EVisibility GetLoadIndicatorVisibility() const
 	{
-		//bool Vis = GetMoviePlayer()->IsLoadingFinished();
 		return GetMoviePlayer()->IsLoadingFinished() ? EVisibility::Collapsed : EVisibility::Visible;
 	}
 	
@@ -101,7 +102,7 @@ public:
 		LoadingScreen.bWaitForManualStop = PlayUntilStopped;
 		LoadingScreen.bAllowEngineTick = PlayUntilStopped;
 		LoadingScreen.MinimumLoadingScreenDisplayTime = PlayTime;
-		LoadingScreen.WidgetLoadingScreen = SNew(SAsyncLoadScreen);
+		LoadingScreen.WidgetLoadingScreen = SNew(SAsyncLoadScreen);	
 		GetMoviePlayer()->SetupLoadingScreen(LoadingScreen);
 	}
 
@@ -115,7 +116,6 @@ public:
 		FLoadingScreenAttributes LoadingScreen;
 		LoadingScreen.bAutoCompleteWhenLoadingCompletes = true;
 		LoadingScreen.MinimumLoadingScreenDisplayTime = 3.f;
-		//LoadingScreen.WidgetLoadingScreen = SNew(SAsyncLoadScreen);
 		LoadingScreen.WidgetLoadingScreen = SNew(SAsyncLoadScreen);
 		GetMoviePlayer()->SetupLoadingScreen(LoadingScreen);
 	}
