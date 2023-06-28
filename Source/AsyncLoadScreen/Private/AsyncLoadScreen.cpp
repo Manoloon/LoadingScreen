@@ -32,8 +32,6 @@ public:
 		LoadingScreenBrush = MakeShareable(new FAsyncLoadingScreenBrush(LoadingScreenAsset,FVector2D(1408,792)));
 		static const FName ThrobberAsset(TEXT("/Game/UI/Throbber"));
 		ThrobberImageBrush = MakeShareable(new FAsyncLoadingScreenBrush(ThrobberAsset,FVector2D(16,16)));
-		//FSlateBrush *BackgroundBrush = new FSlateBrush();
-		//BackgroundBrush->TintColor= FLinearColor(0.04f,0.04f,0.04f,1.0f);
 		const FText SideNoteText = LOCTEXT("Sidenote","Prepare your weapons");
 
 		ChildSlot
@@ -109,8 +107,6 @@ public:
 		LoadingScreenBrush = MakeShareable(new FAsyncLoadingScreenBrush(LoadingScreenAsset,FVector2D(1726,300)));
 		static const FName ThrobberImageAsset(TEXT("/Game/UI/Throbber"));
 		ThrobberImageBrush = MakeShareable(new FAsyncLoadingScreenBrush(ThrobberImageAsset,FVector2D(16,16)));
-		//FSlateBrush *BackgroundBrush = new FSlateBrush();
-		//BackgroundBrush->TintColor= FLinearColor(0.0f,0.0f,0.0f,1.0f);
 
 		ChildSlot
 			[
