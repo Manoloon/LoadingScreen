@@ -87,12 +87,12 @@ public:
 
 	void Construct(const FArguments& InArgs)
 	{
-		static const FName LoadingScreenName(TEXT("/Game/UI/UELogo"));
-		LoadingScreenBrush = MakeShareable(new FAsyncLoadingScreenBrush(LoadingScreenName,FVector2D(1726,337)));
-		static const FName ThrobberImage(TEXT("/Game/UI/Throbber"));
-		ThrobberImageBrush = MakeShareable(new FAsyncLoadingScreenBrush(ThrobberImage,FVector2D(16,16)));
-		FSlateBrush *BGBrush = new FSlateBrush();
-		BGBrush->TintColor= FLinearColor(0.0f,0.0f,0.0f,1.0f);
+		static const FName LoadingScreenAsset(TEXT("/Game/UI/UELogo"));
+		LoadingScreenBrush = MakeShareable(new FAsyncLoadingScreenBrush(LoadingScreenAsset,FVector2D(1726,337)));
+		static const FName ThrobberImageAsset(TEXT("/Game/UI/Throbber"));
+		ThrobberImageBrush = MakeShareable(new FAsyncLoadingScreenBrush(ThrobberImageAsset,FVector2D(16,16)));
+		FSlateBrush *BackgroundBrush = new FSlateBrush();
+		BackgroundBrush->TintColor= FLinearColor(0.0f,0.0f,0.0f,1.0f);
 
 		ChildSlot
 			[
@@ -102,7 +102,7 @@ public:
 			.VAlign(VAlign_Fill)
 			[
 				SNew(SBorder)	
-				.BorderImage(BGBrush)
+				.BorderImage(BackgroundBrush)
 			]
 			+SOverlay::Slot()
 			.HAlign(HAlign_Center)
