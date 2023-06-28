@@ -20,81 +20,6 @@ struct FAsyncLoadingScreenBrush : public FSlateDynamicImageBrush, public FGCObje
 	}
 };
 
-class SAsyncLoadScreen : public SCompoundWidget
-{
-public:
-	SLATE_BEGIN_ARGS(SAsyncLoadScreen){}
-	SLATE_END_ARGS()
-
-	void Construct(const FArguments& InArgs)
-	{
-		static const FName LoadingScreenAsset(TEXT("/Game/UI/loading"));
-		LoadingScreenBrush = MakeShareable(new FAsyncLoadingScreenBrush(LoadingScreenAsset,FVector2D(1408,792)));
-		static const FName ThrobberAsset(TEXT("/Game/UI/Throbber"));
-		ThrobberImageBrush = MakeShareable(new FAsyncLoadingScreenBrush(ThrobberAsset,FVector2D(16,16)));
-		const FText SideNoteText = LOCTEXT("Sidenote","Prepare your weapons");
-
-		ChildSlot
-		[
-			SNew(SOverlay)
-			+ SOverlay::Slot()
-			.HAlign(HAlign_Fill)
-			.VAlign(VAlign_Fill)
-			[
-				SNew(SImage)	
-				.ColorAndOpacity(FLinearColor(0.04f,0.04f,0.04f,1.0f))
-			]
-			+SOverlay::Slot()
-			.HAlign(HAlign_Center)
-			.VAlign(VAlign_Center)
-			[
-				SNew(SImage)
-				.Image(LoadingScreenBrush.Get())
-			]
-			+SOverlay::Slot()
-			.HAlign(HAlign_Fill)
-			.VAlign(VAlign_Fill)
-			[
-				SNew(SHorizontalBox)
-				+SHorizontalBox::Slot()
-				.FillWidth(2)
-				.VAlign(VAlign_Bottom)
-				[
-					SNew(SVerticalBox)
-					+SVerticalBox::Slot()
-					.VAlign(VAlign_Bottom)
-					.HAlign(HAlign_Center)
-					[
-					SNew(STextBlock)
-					.Text(SideNoteText)
-					.ColorAndOpacity(FLinearColor::Green)
-					]
-					+SVerticalBox::Slot()	
-					.VAlign(VAlign_Bottom)
-					.HAlign(HAlign_Right)
-					.Padding(FMargin(10.0f))
-					[
-					SNew(SThrobber)
-					.PieceImage(ThrobberImageBrush.Get())
-					.Animate(SThrobber::Horizontal)
-					.NumPieces(8)
-					.Visibility(this, &SAsyncLoadScreen::GetLoadIndicatorVisibility)
-					]
-				]
-				
-			]
-		];
-	}
-private:
-        // ReSharper disable once CppMemberFunctionMayBeStatic is used by .Visibility in line 65
-        EVisibility GetLoadIndicatorVisibility() const
-	{
-		return GetMoviePlayer()->IsLoadingFinished() ? EVisibility::Collapsed : EVisibility::Visible;
-	}
-	TSharedPtr<FSlateDynamicImageBrush> LoadingScreenBrush;
-	TSharedPtr<FSlateDynamicImageBrush> ThrobberImageBrush;
-};
-
 class SAsyncStartScreen : public SCompoundWidget
 {
 public:
@@ -174,14 +99,15 @@ public:
 		return true;
 	}
 	// This function should derive from a functionlibrary .
-	virtual void StartInGameLoadingScreen(bool PlayUntilStopped, float PlayTime) override
+	virtual void StartInGameLoadingScreen(bool PlayUntilStopped, float PlayTime,
+            const TSharedPtr<SWidget> SlateWidget) override
 	{
 		FLoadingScreenAttributes LoadingScreen;
 		LoadingScreen.bAutoCompleteWhenLoadingCompletes = !PlayUntilStopped;
 		LoadingScreen.bWaitForManualStop = PlayUntilStopped;
 		LoadingScreen.bAllowEngineTick = PlayUntilStopped;
 		LoadingScreen.MinimumLoadingScreenDisplayTime = PlayTime;
-		LoadingScreen.WidgetLoadingScreen = SNew(SAsyncLoadScreen);	
+		LoadingScreen.WidgetLoadingScreen = SlateWidget;	
 		GetMoviePlayer()->SetupLoadingScreen(LoadingScreen);
 	}
 

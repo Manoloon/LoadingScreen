@@ -10,7 +10,7 @@ public class LoadingScreen : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "MoviePlayer" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "AsyncLoadScreen", "Slate","SlateCore" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "AsyncLoadScreen", "Slate","UMG","SlateCore" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

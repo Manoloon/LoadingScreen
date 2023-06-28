@@ -11,7 +11,7 @@ public:
 	}
 
 	/** Kicks off the loading screen for in game loading (not startup) */
-	virtual void StartInGameLoadingScreen(bool PlayUntilStopped, float PlayTime)=0;
+	virtual void StartInGameLoadingScreen(bool PlayUntilStopped, float PlayTime,const TSharedPtr<SWidget> SlateWidget)=0;
 
 	/** Stops the loading screen */
 	virtual void StopInGameLoadingScreen()=0;

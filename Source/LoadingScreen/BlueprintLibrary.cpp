@@ -1,11 +1,16 @@
 ﻿#include "BlueprintLibrary.h"
-
 #include "AsyncLoadScreen.h"
+#include "Blueprint/UserWidget.h"
 
-void UBlueprintLibrary::PlayLoadingScreen(bool PlayUntilStopped, float PlayTime)
+void UBlueprintLibrary::PlayLoadingScreen(bool PlayUntilStopped, float PlayTime,UUserWidget* LoadingWidget)
 {
+	if(!IsValid(LoadingWidget))
+	{
+	 return;
+	}
 	IAsyncLoadScreenModule& LoadingScreenModule = IAsyncLoadScreenModule::Get();
-	LoadingScreenModule.StartInGameLoadingScreen(PlayUntilStopped,PlayTime);
+	const TSharedRef<SWidget> LoadingScreen = LoadingWidget->TakeWidget();
+	LoadingScreenModule.StartInGameLoadingScreen(PlayUntilStopped,PlayTime,LoadingScreen);
 }
 
 void UBlueprintLibrary::StopLoadingScreen()
